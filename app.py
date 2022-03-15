@@ -2,29 +2,52 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-st.set_page_config(page_title="HR Dashboard", page_icon=":bar_chart:", layout="wide")
+st.set_page_config(page_title="Recruitment Network", page_icon=":wave:", layout="wide")
 
-df = pd.read_csv('data/data.csv')
+# Header ---- 
+with st.container():
+    st.subheader("Welcomeeee :wave:")
+    st.title("Recruitment Network")
+    st.write("")
 
 
-# SIDEBAR
+from streamlit_agraph import agraph, Node, Edge, Config
 
-st.sidebar.header("Filter here:")
-gender = st.sidebar.multiselect(
-    "Select gender:",
-    options=df["gender"].unique(),
-    default=df["gender"].unique()
-)
+nodes = []
+edges = []
+nodes.append( Node(id="javascript", 
+                   label="", 
+                   size=800, 
+                   svg="https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/1024px-Unofficial_JavaScript_logo_2.svg.png") 
+            ) 
+            
+nodes.append( Node(id="react",
+                   label="",
+                   size=800, 
+                   svg="https://cdn.worldvectorlogo.com/logos/react-1.svg") 
+            )
 
-st.sidebar.header("Filter here:")
-ssc_b = st.sidebar.multiselect(
-    "Select ssc_b:",
-    options=df["ssc_b"].unique(),
-    default=df["ssc_b"].unique()
-)
+edges.append( Edge(source="javascript", 
+                   label="framework_of", 
+                   target="react", 
+                   type="CURVE_SMOOTH") 
+            )
 
-df_selection = df.query(
-    "gender == @gender & ssc_b == @ssc_b"
-)
+config = Config(width=1400, 
+                height=500, 
+                directed=True,
+                nodeHighlightBehavior=True, 
+                highlightColor="#F7A7A6", # or "blue"
+                collapsible=True,
+                node={'labelProperty':'label'},
+                link={'labelProperty': 'label', 'renderLabel': True}
+                # **kwargs e.g. node_size=1000 or node_color="blue"
+                ) 
 
-st.dataframe(df_selection)
+return_value = agraph(nodes=nodes, 
+                      edges=edges, 
+                      config=config)
+
+
+
+
